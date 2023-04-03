@@ -37,7 +37,7 @@ jobs:
       - name: assemble
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: assemble -Pversion=${{ inputs.version }}
+          arguments: :assemble -Pversion=${{ inputs.version }}
 
       - name: Upload reports
         if: failure()
@@ -49,4 +49,4 @@ jobs:
       - name: Publish
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: -Pversion=${{ inputs.version }} publishToSonatype closeSonatypeStagingRepository
+          arguments: -Pversion=${{ inputs.version }} :publishToSonatype :closeSonatypeStagingRepository
