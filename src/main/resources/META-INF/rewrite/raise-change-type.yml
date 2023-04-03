@@ -1,0 +1,51 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: arrow.RaiseRefactor
+displayName: Refactor imports to Arrow Core Raise
+description: Migration file to refactor import from Arrow Core Continuations to Raise.
+recipeList:
+    - arrow.ChangeTopLevelFunction:
+        methodPattern: arrow.core.continuations.EffectKt effect(..)
+        newMethodName: effect
+        newMethodImport: arrow.core.raise.effect
+    - org.openrewrite.java.ChangeMethodName:
+        methodPattern: arrow.core.continuations.EffectScope shift(*)
+        newMethodName: raise
+    - org.openrewrite.java.ChangeType:
+        oldFullyQualifiedTypeName: arrow.core.continuations.EffectScope
+        newFullyQualifiedTypeName: arrow.core.raise.Raise
+    - org.openrewrite.java.ChangeType:
+        oldFullyQualifiedTypeName: arrow.core.continuations.Effect
+        newFullyQualifiedTypeName: arrow.core.raise.Effect
+
+    - arrow.ChangeTopLevelFunction:
+        methodPattern: arrow.core.continuations.EagerEffectKt eagerEffect(..)
+        newMethodName: eagerEffect
+        newMethodImport: arrow.core.raise.eagerEffect
+    - org.openrewrite.java.ChangeMethodName:
+          methodPattern: arrow.core.continuations.EagerEffectScope shift(*)
+          newMethodName: raise
+    - org.openrewrite.java.ChangeType:
+        oldFullyQualifiedTypeName: arrow.core.continuations.EagerEffectScope
+        newFullyQualifiedTypeName: arrow.core.raise.Raise
+    - org.openrewrite.java.ChangeType:
+          oldFullyQualifiedTypeName: arrow.core.continuations.EagerEffect
+          newFullyQualifiedTypeName: arrow.core.raise.EagerEffect
+
+    - arrow.RaiseEnsureImport
+    - arrow.AddRaiseExtensionImport:
+          methodPattern: fold(..)
+          methodImport: arrow.core.raise.fold
+    - arrow.AddRaiseExtensionImport:
+        methodPattern: toEither()
+        methodImport: arrow.core.raise.toEither
+    - arrow.AddRaiseExtensionImport:
+        methodPattern: toIor()
+        methodImport: arrow.core.raise.toIor
+    - arrow.AddRaiseExtensionImport:
+          methodPattern: toValidated()
+          methodImport: arrow.core.raise.toValidated
+    - arrow.AddRaiseExtensionImport:
+        methodPattern: orNull()
+        newMethodName: getOrNull
+        methodImport: arrow.core.raise.getOrNull
+    - arrow.RewriteEffectDSL
