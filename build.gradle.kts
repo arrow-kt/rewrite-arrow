@@ -70,7 +70,7 @@ publishing {
   }
 }
 
-configure<NexusPublishExtension> {
+nexusPublishing {
   repositories {
     sonatype {
       username.set(getenv("OSS_USER"))
@@ -80,16 +80,14 @@ configure<NexusPublishExtension> {
   }
 }
 
-afterEvaluate {
-  signing {
-    if (shouldSign) {
-      try {
-        useInMemoryPgpKeys(getenv("SIGNING_KEY_ID"), getenv("SIGNING_KEY"), getenv("SIGNING_KEY_PASSPHRASE"))
-      } catch (_: Throwable) {
-        useGpgCmd()
-      }
-      sign(project.extensions.getByName<PublishingExtension>("publishing").publications)
+signing {
+  if (shouldSign) {
+    try {
+      useInMemoryPgpKeys(getenv("SIGNING_KEY_ID"), getenv("SIGNING_KEY"), getenv("SIGNING_KEY_PASSPHRASE"))
+    } catch (_: Throwable) {
+      useGpgCmd()
     }
+    sign(project.extensions.getByName<PublishingExtension>("publishing").publications)
   }
 }
 
