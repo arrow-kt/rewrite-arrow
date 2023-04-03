@@ -8,7 +8,6 @@ plugins {
 }
 
 group = "io.arrow-kt"
-version = "1.0-SNAPSHOT"
 
 repositories {
   mavenCentral()
@@ -42,6 +41,25 @@ java {
   withSourcesJar()
 }
 
+nexusPublishing {
+  repositories {
+    sonatype {
+      username.set(getenv("OSS_USER"))
+      password.set(getenv("OSS_TOKEN"))
+      stagingProfileId.set(getenv("OSS_STAGING_PROFILE_ID"))
+    }
+  }
+}
+
+signing {
+  useInMemoryPgpKeys(
+    getenv("SIGNING_KEY_ID"),
+    getenv("SIGNING_KEY"),
+    getenv("SIGNING_KEY_PASSPHRASE")
+  )
+  sign(project.extensions.getByName<PublishingExtension>("publishing").publications)
+}
+
 publishing {
   publications {
     create<MavenPublication>("mavenJava") {
@@ -73,35 +91,3 @@ publishing {
     }
   }
 }
-
-nexusPublishing {
-  repositories {
-    sonatype {
-      username.set(getenv("OSS_USER"))
-      password.set(getenv("OSS_TOKEN"))
-      stagingProfileId.set(getenv("OSS_STAGING_PROFILE_ID"))
-    }
-  }
-}
-
-signing {
-  if (shouldSign) {
-    useInMemoryPgpKeys(
-      getenv("SIGNING_KEY_ID"),
-      getenv("SIGNING_KEY"),
-      getenv("SIGNING_KEY_PASSPHRASE")
-    )
-    sign(project.extensions.getByName<PublishingExtension>("publishing").publications)
-  }
-}
-
-private val SigningExtension.shouldSign: Boolean
-  get() = !isSnapshot && !isLocal
-
-val SigningExtension.isSnapshot: Boolean
-  get() = project.version.toString().endsWith("-SNAPSHOT", ignoreCase = true)
-
-val SigningExtension.isLocal: Boolean
-  get() = project.gradle.startParameter.taskNames.any {
-    it.contains("publishToMavenLocal", ignoreCase = true)
-  }
