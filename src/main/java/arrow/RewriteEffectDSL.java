@@ -11,28 +11,6 @@ import org.openrewrite.kotlin.KotlinIsoVisitor;
 /**
  * Rewrite object method invocations to top level functions.
  * <p>
- * Library code:
- * ```kotlin
- * package arrow.core.continuations
- * <p>
- * public object either {
- *   public inline fun <E, A> eager(noinline f: suspend EagerEffectScope<E>.() -> A): Either<E, A> =
- *     eagerEffect(f).toEither()
- * <p>
- *   public suspend operator fun <E, A> invoke(f: suspend EffectScope<E>.() -> A): Either<E, A> =
- *     effect(f).toEither()
- * }
- * ```
- * <p>
- * needs to be rewritten to:
- * <p>
- * ```kotlin
- * package arrow.core.raise
- * <p>
- * public inline fun <E, A> either(@BuilderInference block: Raise<E>.() -> A): Either<E, A> =
- *   fold({ block.invoke(this) }, { Either.Left(it) }, { Either.Right(it) })
- * ```
- * <p>
  * So we need to rewrite:
  *  - `arrow.core.continuations.either eager(..)` to `arrow.core.raise either(..)`
  *  - `arrow.core.continuations.either invoke(..)` to `either(..)`
