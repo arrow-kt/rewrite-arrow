@@ -37,6 +37,11 @@ dependencies {
   testRuntimeOnly(libs.lombok)
 }
 
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
+
 publishing {
   publications {
     create<MavenPublication>("mavenJava") {
@@ -72,24 +77,20 @@ publishing {
 nexusPublishing {
   repositories {
     sonatype {
-      username.set(getEnvOrThrow("OSS_USER"))
-      password.set(getEnvOrThrow("OSS_TOKEN"))
-      stagingProfileId.set(getEnvOrThrow("OSS_STAGING_PROFILE_ID"))
+      username.set(getenv("OSS_USER"))
+      password.set(getenv("OSS_TOKEN"))
+      stagingProfileId.set(getenv("OSS_STAGING_PROFILE_ID"))
     }
   }
 }
 
-fun getEnvOrThrow(name: String): String {
-  return getenv(name) ?: throw IllegalArgumentException("Environment variable $name is required")
-}
-
 signing {
   if (shouldSign) {
-    try {
-      useInMemoryPgpKeys(getEnvOrThrow("SIGNING_KEY_ID"), getEnvOrThrow("SIGNING_KEY"), getEnvOrThrow("SIGNING_KEY_PASSPHRASE"))
-    } catch (_: Throwable) {
-      useGpgCmd()
-    }
+    useInMemoryPgpKeys(
+      getenv("SIGNING_KEY_ID"),
+      getenv("SIGNING_KEY"),
+      getenv("SIGNING_KEY_PASSPHRASE")
+    )
     sign(project.extensions.getByName<PublishingExtension>("publishing").publications)
   }
 }
