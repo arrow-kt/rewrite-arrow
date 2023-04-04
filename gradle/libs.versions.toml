@@ -5,7 +5,7 @@ logback = "1.4.6"
 arrow = "1.1.6-alpha.91"
 rewrite = "1.17.0"
 rewrite-kotlin = "0.2.6"
-openrewrite = "5.38.2"
+openrewrite = "5.39.0"
 assertj = "3.24.2"
 kotlin = "1.8.20"
 
