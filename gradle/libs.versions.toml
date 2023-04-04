@@ -3,8 +3,9 @@ org-junit-jupiter = "5.9.2"
 lombok = "1.18.26"
 logback = "1.4.6"
 arrow = "1.1.6-alpha.91"
-rewrite = "1.17.0"
 rewrite-kotlin = "0.2.6"
+rewrite = "7.38.0"
+rewrite-testing = "1.35.0"
 openrewrite = "5.39.0"
 assertj = "3.24.2"
 kotlin = "1.8.20"
@@ -12,13 +13,12 @@ kotlin = "1.8.20"
 [libraries]
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
-rewrite-recipe-bom = { module = "org.openrewrite.recipe:rewrite-recipe-bom", version.ref = "rewrite" }
-rewrite-java = { module = "org.openrewrite:rewrite-java" }
-rewrite-core = { module = "org.openrewrite:rewrite-core" }
+rewrite-java = { module = "org.openrewrite:rewrite-java", version.ref = "rewrite" }
+rewrite-core = { module = "org.openrewrite:rewrite-core", version.ref = "rewrite" }
 rewrite-kotlin = { module = "org.openrewrite:rewrite-kotlin", version.ref = "rewrite-kotlin" }
 
-rewrite-test = { module = "org.openrewrite:rewrite-test" }
-rewrite-testing-frameworks = { module = "org.openrewrite.recipe:rewrite-testing-frameworks" }
+rewrite-test = { module = "org.openrewrite:rewrite-test", version.ref = "rewrite" }
+rewrite-testing-frameworks = { module = "org.openrewrite.recipe:rewrite-testing-frameworks", version.ref = "rewrite-testing" }
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "org-junit-jupiter" }

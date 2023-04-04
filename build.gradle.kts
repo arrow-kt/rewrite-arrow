@@ -26,7 +26,6 @@ dependencies {
   compileOnly(libs.lombok)
 
   implementation("com.puppycrawl.tools:checkstyle:10.9.3")
-  implementation(platform(libs.rewrite.recipe.bom))
   compileOnly(libs.rewrite.core)
   implementation(libs.bundles.rewrite)
 
