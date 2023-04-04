@@ -44,8 +44,8 @@ public class AddRaiseExtensionImport extends Recipe {
         this.methodPattern = methodPattern;
         this.newMethodName = newMethodName;
         this.methodImport = methodImport;
-        this.foldPattern = "arrow.core.continuations.Effect " + methodPattern;
-        this.eagerFoldPattern = "arrow.core.continuations.EagerEffect " + methodPattern;
+        this.foldPattern = "arrow.core.raise.Effect " + methodPattern;
+        this.eagerFoldPattern = "arrow.core.raise.EagerEffect " + methodPattern;
     }
 
     @Override

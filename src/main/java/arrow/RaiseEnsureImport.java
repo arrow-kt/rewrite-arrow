@@ -42,9 +42,9 @@ public class RaiseEnsureImport extends Recipe {
     @Override
     protected TreeVisitor<?, ExecutionContext> getSingleSourceApplicableTest() {
         return Applicability.or(
-                new UsesType<>("arrow.core.raise.Raise"),
-                new UsesType<>("arrow.core.raise.Effect"),
-                new UsesType<>("arrow.core.raise.EagerEffect")
+                new UsesType<>("arrow.core.raise.Raise", true),
+                new UsesType<>("arrow.core.raise.Effect", true),
+                new UsesType<>("arrow.core.raise.EagerEffect", true)
         );
     }
 
