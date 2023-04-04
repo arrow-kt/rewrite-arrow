@@ -64,8 +64,6 @@ publishing {
     create<MavenPublication>("mavenJava") {
       artifactId = "rewrite-arrow"
       from(components["java"])
-      artifact(tasks["sourcesJar"])
-      artifact(tasks["javadocJar"])
       pom {
         name.set("Rewrite Arrow")
         description.set("OpenRewrite recipes for Arrow 1.2.0-RC / 2.0.0")
