@@ -57,7 +57,7 @@ public class ChangeTopLevelFunction extends Recipe {
 
     @Override
     protected TreeVisitor<?, ExecutionContext> getSingleSourceApplicableTest() {
-        return Applicability.or(new UsesMethod<>(methodPattern, true));
+        return Applicability.or(new UsesMethod<>(methodPattern, false));
     }
 
     @Override
