@@ -9,6 +9,8 @@ rewrite-testing = "1.36.0"
 openrewrite = "5.39.0"
 assertj = "3.24.2"
 kotlin = "1.8.20"
+nexus = "1.3.0"
+checkstyle = "10.9.3"
 
 [libraries]
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
@@ -16,6 +18,7 @@ arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 rewrite-java = { module = "org.openrewrite:rewrite-java", version.ref = "rewrite" }
 rewrite-core = { module = "org.openrewrite:rewrite-core", version.ref = "rewrite" }
 rewrite-kotlin = { module = "org.openrewrite:rewrite-kotlin", version.ref = "rewrite-kotlin" }
+checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
 
 rewrite-test = { module = "org.openrewrite:rewrite-test", version.ref = "rewrite" }
 rewrite-testing-frameworks = { module = "org.openrewrite.recipe:rewrite-testing-frameworks", version.ref = "rewrite-testing" }
@@ -39,3 +42,4 @@ rewrite-test = [
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 openrewrite = { id = "org.openrewrite.rewrite", version.ref = "openrewrite" }
+nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }

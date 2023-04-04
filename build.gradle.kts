@@ -1,10 +1,10 @@
 import java.lang.System.getenv
 
-plugins {
+@Suppress("DSL_SCOPE_VIOLATION") plugins {
   java
   `maven-publish`
   signing
-  id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
+  alias(libs.plugins.nexus)
 }
 
 group = "io.arrow-kt"
@@ -25,8 +25,8 @@ dependencies {
   annotationProcessor(libs.lombok)
   compileOnly(libs.lombok)
 
-  implementation("com.puppycrawl.tools:checkstyle:10.9.3")
-  compileOnly(libs.rewrite.core)
+  implementation(libs.checkstyle)
+  implementation(libs.rewrite.core)
   implementation(libs.bundles.rewrite)
 
   testImplementation(libs.bundles.rewrite.test)
