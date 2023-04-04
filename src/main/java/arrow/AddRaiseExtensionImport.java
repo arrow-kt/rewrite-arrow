@@ -65,7 +65,7 @@ public class AddRaiseExtensionImport extends Recipe {
 
     @Override
     protected TreeVisitor<?, ExecutionContext> getSingleSourceApplicableTest() {
-        return Applicability.or(new UsesMethod<>(foldPattern), new UsesMethod<>(eagerFoldPattern));
+        return Applicability.or(new UsesMethod<>(foldPattern, true), new UsesMethod<>(eagerFoldPattern, true));
     }
 
     private class RaiseFoldImportVisitor extends KotlinIsoVisitor<ExecutionContext> {

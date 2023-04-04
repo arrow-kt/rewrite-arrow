@@ -40,9 +40,9 @@ public class RewriteEffectDSL extends Recipe {
     @Override
     protected TreeVisitor<?, ExecutionContext> getSingleSourceApplicableTest() {
         return Applicability.or(
-                new UsesMethod<>(eagerPattern),
-                new UsesMethod<>(invokePattern),
-                new UsesMethod<>(implicitInvokePattern)
+                new UsesMethod<>(eagerPattern, true),
+                new UsesMethod<>(invokePattern, true),
+                new UsesMethod<>(implicitInvokePattern, true)
         );
     }
 
