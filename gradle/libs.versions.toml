@@ -7,7 +7,7 @@ rewrite = "1.17.0"
 rewrite-kotlin = "0.2.6"
 openrewrite = "5.38.2"
 assertj = "3.24.2"
-kotlin = "1.8.10"
+kotlin = "1.8.20"
 
 [libraries]
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
