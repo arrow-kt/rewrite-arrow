@@ -1,5 +1,5 @@
 @Suppress("DSL_SCOPE_VIOLATION") plugins {
-  id("org.openrewrite.build.recipe-library") version "1.9.3"
+  id("org.openrewrite.build.recipe-library") version "1.9.4"
 }
 
 group = "io.arrow-kt"
