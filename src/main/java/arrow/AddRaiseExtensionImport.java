@@ -8,6 +8,7 @@ import org.openrewrite.*;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.search.UsesMethod;
 import org.openrewrite.java.tree.J;
+import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.kotlin.KotlinIsoVisitor;
 
 /**
@@ -17,9 +18,6 @@ import org.openrewrite.kotlin.KotlinIsoVisitor;
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class AddRaiseExtensionImport extends Recipe {
-
-    private final String foldPattern;
-    private final String eagerFoldPattern;
 
     @Option(displayName = "Method pattern",
             description = "A method pattern that is used to find matching method declarations/invocations.",
@@ -37,9 +35,14 @@ public class AddRaiseExtensionImport extends Recipe {
             example = "my.package.methodName")
     String methodImport;
 
+    // Minor change. Generally, we consider it best practice to add the recipe `Options` first to communicate relevant APIs to the user.
+    // Removed private final since it's added by `@Value`
+    String foldPattern;
+    String eagerFoldPattern;
+
     public AddRaiseExtensionImport(
             @JsonProperty("methodPattern") String methodPattern,
-            @JsonProperty("methodName") String newMethodName,
+            @JsonProperty("methodName") @Nullable String newMethodName, // Added @Nullable annoation to match nullability of the option.
             @JsonProperty("methodImport") String methodImport) {
         this.methodPattern = methodPattern;
         this.newMethodName = newMethodName;
@@ -78,7 +81,12 @@ public class AddRaiseExtensionImport extends Recipe {
             if (foldEffectMatcher.matches(m) || foldEagerEffectMatcher.matches(m)) {
                 // Rename method if name changed (orNull -> getOrNull)
                 if (newMethodName != null) {
-                    m = m.withName(m.getName().withSimpleName(newMethodName));
+                    // Update the type along with the name. Note: if possible ChangeMethodName is a better choice.
+                    JavaType.Method type = m.getMethodType();
+                    if (type != null) {
+                        type = type.withName(newMethodName);
+                    }
+                    m = m.withName(m.getName().withSimpleName(newMethodName)).withMethodType(type);
                 }
 
                 // Add import for raise that previously was a method on Effect/EagerEffect

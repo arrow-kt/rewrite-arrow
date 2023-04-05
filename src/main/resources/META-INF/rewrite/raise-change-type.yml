@@ -3,49 +3,65 @@ name: arrow.RaiseRefactor
 displayName: Refactor imports to Arrow Core Raise
 description: Migration file to refactor import from Arrow Core Continuations to Raise.
 recipeList:
-    - arrow.ChangeTopLevelFunction:
-        methodPattern: arrow.core.continuations.EffectKt effect(..)
-        newMethodName: effect
-        newMethodImport: arrow.core.raise.effect
-    - org.openrewrite.java.ChangeMethodName:
-        methodPattern: arrow.core.continuations.EffectScope shift(*)
-        newMethodName: raise
-    - org.openrewrite.java.ChangeType:
-        oldFullyQualifiedTypeName: arrow.core.continuations.EffectScope
-        newFullyQualifiedTypeName: arrow.core.raise.Raise
-    - org.openrewrite.java.ChangeType:
-        oldFullyQualifiedTypeName: arrow.core.continuations.Effect
-        newFullyQualifiedTypeName: arrow.core.raise.Effect
+  # Encapsulate the Effect Scope migration for separate execution / testing.
+  - arrow.migrate.EffectScope
+  # Encapsulate the Effect Scope migration for separate execution / testing.
+  - arrow.migrate.EagerEffectScope
+  - arrow.RaiseEnsureImport
+  - arrow.AddRaiseExtensionImport:
+      methodPattern: fold(..)
+      methodImport: arrow.core.raise.fold
+  - arrow.AddRaiseExtensionImport:
+      methodPattern: toEither()
+      methodImport: arrow.core.raise.toEither
+  - arrow.AddRaiseExtensionImport:
+      methodPattern: toIor()
+      methodImport: arrow.core.raise.toIor
+  - arrow.AddRaiseExtensionImport:
+      methodPattern: toValidated()
+      methodImport: arrow.core.raise.toValidated
+  - arrow.AddRaiseExtensionImport:
+      methodPattern: orNull()
+      newMethodName: getOrNull
+      methodImport: arrow.core.raise.getOrNull
+  - arrow.RewriteEffectDSL
 
-    - arrow.ChangeTopLevelFunction:
-        methodPattern: arrow.core.continuations.EagerEffectKt eagerEffect(..)
-        newMethodName: eagerEffect
-        newMethodImport: arrow.core.raise.eagerEffect
-    - org.openrewrite.java.ChangeMethodName:
-          methodPattern: arrow.core.continuations.EagerEffectScope shift(*)
-          newMethodName: raise
-    - org.openrewrite.java.ChangeType:
-        oldFullyQualifiedTypeName: arrow.core.continuations.EagerEffectScope
-        newFullyQualifiedTypeName: arrow.core.raise.Raise
-    - org.openrewrite.java.ChangeType:
-          oldFullyQualifiedTypeName: arrow.core.continuations.EagerEffect
-          newFullyQualifiedTypeName: arrow.core.raise.EagerEffect
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: arrow.migrate.EffectScope
+displayName: some display name
+description: some description.
+recipeList:
+  - arrow.ChangeTopLevelFunction:
+      methodPattern: arrow.core.continuations.EffectKt effect(..)
+      newMethodName: effect
+      newMethodImport: arrow.core.raise.effect
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: arrow.core.continuations.EffectScope shift(*)
+      newMethodName: raise
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: arrow.core.continuations.EffectScope
+      newFullyQualifiedTypeName: arrow.core.raise.Raise
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: arrow.core.continuations.Effect
+      newFullyQualifiedTypeName: arrow.core.raise.Effect
 
-    - arrow.RaiseEnsureImport
-    - arrow.AddRaiseExtensionImport:
-          methodPattern: fold(..)
-          methodImport: arrow.core.raise.fold
-    - arrow.AddRaiseExtensionImport:
-        methodPattern: toEither()
-        methodImport: arrow.core.raise.toEither
-    - arrow.AddRaiseExtensionImport:
-        methodPattern: toIor()
-        methodImport: arrow.core.raise.toIor
-    - arrow.AddRaiseExtensionImport:
-          methodPattern: toValidated()
-          methodImport: arrow.core.raise.toValidated
-    - arrow.AddRaiseExtensionImport:
-        methodPattern: orNull()
-        newMethodName: getOrNull
-        methodImport: arrow.core.raise.getOrNull
-    - arrow.RewriteEffectDSL
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: arrow.migrate.EagerEffectScope # added migrate to the name to avoid conflict with other recipes. Note: version may be used to avoid conflicts with future migrations.
+displayName: some display name
+description: some description.
+recipeList:
+  - arrow.ChangeTopLevelFunction:
+      methodPattern: arrow.core.continuations.EagerEffectKt eagerEffect(..)
+      newMethodName: eagerEffect
+      newMethodImport: arrow.core.raise.eagerEffect
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: arrow.core.continuations.EagerEffectScope shift(*)
+      newMethodName: raise
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: arrow.core.continuations.EagerEffectScope
+      newFullyQualifiedTypeName: arrow.core.raise.Raise
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: arrow.core.continuations.EagerEffect
+      newFullyQualifiedTypeName: arrow.core.raise.EagerEffect

@@ -9,6 +9,7 @@ import org.openrewrite.*;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.search.UsesMethod;
 import org.openrewrite.java.tree.J;
+import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.kotlin.KotlinIsoVisitor;
 
 /**
@@ -37,8 +38,8 @@ public class ChangeTopLevelFunction extends Recipe {
     @JsonCreator
     public ChangeTopLevelFunction(
             @JsonProperty("methodPattern") String methodPattern,
-            @JsonProperty("newMethodPattern") String newMethodName,
-            @JsonProperty("newMethodImport") String newMethodImport
+            @JsonProperty("newMethodName") String newMethodName,
+            @JsonProperty("newMethodImport") @Nullable String newMethodImport  // Added @Nullable annoation to match nullability of the option.
     ) {
         this.methodPattern = methodPattern;
         this.newMethodName = newMethodName;
@@ -75,10 +76,14 @@ public class ChangeTopLevelFunction extends Recipe {
         @Override
         public J visitMethodInvocation(J.MethodInvocation method, ExecutionContext executionContext) {
             J.MethodInvocation m = (J.MethodInvocation) super.visitMethodInvocation(method, executionContext);
-            if (methodMatcher.matches(m)) {
+            if (methodMatcher.matches(m) && m.getMethodType() != null) {
                 String importToRemove = m.getMethodType().getDeclaringType().getPackageName() + "." + m.getName().getSimpleName();
-                m = m.withName(m.getName().withSimpleName(newMethodName));
-                if (newMethodName != null) {
+                // Update the type along with the name. Note: if possible ChangeMethodName is a better choice.
+                JavaType.Method type = m.getMethodType();
+                type = type.withName(newMethodName);
+                m = m.withName(m.getName().withSimpleName(newMethodName)).withMethodType(type);
+
+                if (newMethodImport != null) {
                     maybeAddImport(newMethodImport, null, false);
                 }
                 maybeRemoveImport(importToRemove);
