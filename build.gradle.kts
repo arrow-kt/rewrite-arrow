@@ -5,6 +5,11 @@
 group = "io.arrow-kt"
 description = "A rewrite module automating Arrow refactorings from 1.x.x to 1.2.x/2.x.x."
 
+// Doesn't affect version being inject by plugin
+//rewriteRecipe {
+//  version = requireNotNull(libs.rewrite.core.get().version)
+//}
+
 dependencies {
   annotationProcessor(libs.lombok)
   compileOnly(libs.lombok)
