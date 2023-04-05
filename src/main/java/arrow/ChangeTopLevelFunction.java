@@ -52,7 +52,7 @@ public class ChangeTopLevelFunction extends Recipe {
     @JsonCreator
     public ChangeTopLevelFunction(
             @JsonProperty("methodPattern") String methodPattern,
-            @JsonProperty("newMethodPattern") String newMethodName,
+            @JsonProperty("newMethodName") String newMethodName,
             @JsonProperty("newMethodImport") String newMethodImport
     ) {
         this.methodPattern = methodPattern;

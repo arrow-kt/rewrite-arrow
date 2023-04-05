@@ -54,7 +54,7 @@ public class AddRaiseExtensionImport extends Recipe {
 
     public AddRaiseExtensionImport(
             @JsonProperty("methodPattern") String methodPattern,
-            @JsonProperty("methodName") String newMethodName,
+            @JsonProperty("newMethodName") String newMethodName,
             @JsonProperty("methodImport") String methodImport) {
         this.methodPattern = methodPattern;
         this.newMethodName = newMethodName;
