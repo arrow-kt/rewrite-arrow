@@ -21,6 +21,7 @@ import org.openrewrite.*;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.search.UsesMethod;
 import org.openrewrite.java.tree.J;
+import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.kotlin.KotlinIsoVisitor;
 
 /**
@@ -35,12 +36,12 @@ import org.openrewrite.kotlin.KotlinIsoVisitor;
 @EqualsAndHashCode(callSuper = true)
 public class RewriteEffectDSL extends Recipe {
 
-    private final String oldPackage = "arrow.core.continuations.";
-    private final String dslName = "either";
-    private final String fullyQualifiedObject = oldPackage + dslName;
-    private final String eagerPattern = fullyQualifiedObject + " eager(..)";
-    private final String invokePattern = fullyQualifiedObject + " invoke(..)";
-    private final String implicitInvokePattern = fullyQualifiedObject + " " + dslName + "(..)";
+    String oldPackage = "arrow.core.continuations.";
+    String dslName = "either";
+    String fullyQualifiedObject = oldPackage + dslName;
+    String eagerPattern = fullyQualifiedObject + " eager(..)";
+    String invokePattern = fullyQualifiedObject + " invoke(..)";
+    String implicitInvokePattern = fullyQualifiedObject + " " + dslName + "(..)";
 
     @Override
     public String getDisplayName() {
@@ -77,7 +78,14 @@ public class RewriteEffectDSL extends Recipe {
             boolean implicit = implicitInvoke.matches(m);
             boolean matches = eager.matches(m) || implicit || invoke.matches(m);
 
+            // Note: I am not sure if there is an issue using `ChangeMethodName` here.
+            // But it may be simpler to use the `ChangeMethodName` recipe.
             if (matches) {
+                JavaType.Method type = m.getMethodType();
+                if (type != null) {
+                    type = type.withName(dslName);
+                }
+
                 /* Rename the method to the top-level object name.
                  * `eager`, `invoke` -> `either`
                  *
@@ -85,7 +93,7 @@ public class RewriteEffectDSL extends Recipe {
                  * the method name is assigned the name of the object, so we end up with: either.either {
                  * In that case we need to remove the receiver (select).
                  */
-                m = m.withName(m.getName().withSimpleName(dslName));
+                m = m.withName(m.getName().withSimpleName(dslName)).withMethodType(type);
 
                 if (!implicit) {
                     m = m.withSelect(null);
