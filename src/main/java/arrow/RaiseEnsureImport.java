@@ -49,9 +49,14 @@ public class RaiseEnsureImport extends Recipe {
     }
 
     private static class RaiseImportVisitor extends KotlinIsoVisitor<ExecutionContext> {
-        private final MethodMatcher effectScopeMatcher = new MethodMatcher("arrow.core.continuations.EffectScope ensure(..)");
-        private final MethodMatcher eagerEffectScopeMatcher = new MethodMatcher("arrow.core.continuations.EagerEffectScope ensure(..)");
-        private final MethodMatcher raiseEnsureMatcher = new MethodMatcher("arrow.core.raise.Raise ensure(..)");
+        private final MethodMatcher ensureEffect = new MethodMatcher("arrow.core.continuations.EffectScope ensure(..)");
+        private final MethodMatcher ensureEagerEffect = new MethodMatcher("arrow.core.continuations.EagerEffectScope ensure(..)");
+        private final MethodMatcher ensureRaise = new MethodMatcher("arrow.core.raise.Raise ensure(..)");
+
+        private final MethodMatcher ensureNotNullEffect = new MethodMatcher("arrow.core.continuations.EffectScope ensureNotNull(..)");
+        private final MethodMatcher ensureNotNullEagerEffect = new MethodMatcher("arrow.core.continuations.EagerEffectScope ensureNotNull(..)");
+        private final MethodMatcher ensureNotNullRaise = new MethodMatcher("arrow.core.raise.Raise ensureNotNull(..)");
+
 
         // We need to override visitLambda, so that visitMethodInvocation will also get called on the lambda's body.
         @Override
@@ -63,8 +68,11 @@ public class RaiseEnsureImport extends Recipe {
         public J.MethodInvocation visitMethodInvocation(J.MethodInvocation method, ExecutionContext executionContext) {
             J.MethodInvocation m = (J.MethodInvocation) super.visitMethodInvocation(method, executionContext);
             // If we get called on a lambda's body, the method invocation will still be typed to EffectScope & EagerEffectScope.
-            if (raiseEnsureMatcher.matches(m) || effectScopeMatcher.matches(m) || eagerEffectScopeMatcher.matches(m)) {
+            if (ensureRaise.matches(m) || ensureEffect.matches(m) || ensureEagerEffect.matches(m)) {
                 maybeAddImport("arrow.core.raise.ensure", false);
+            }
+            if (ensureNotNullEffect.matches(m) || ensureNotNullEffect.matches(m) || ensureNotNullEagerEffect.matches(m)) {
+                maybeAddImport("arrow.core.raise.ensureNotNull", false);
             }
             return m;
         }
