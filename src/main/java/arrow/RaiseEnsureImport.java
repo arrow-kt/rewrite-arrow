@@ -53,8 +53,8 @@ public class RaiseEnsureImport extends Recipe {
         private final MethodMatcher ensureEagerEffect = new MethodMatcher("arrow.core.continuations.EagerEffectScope ensure(..)");
         private final MethodMatcher ensureRaise = new MethodMatcher("arrow.core.raise.Raise ensure(..)");
 
-        private final MethodMatcher ensureNotNullEffect = new MethodMatcher("arrow.core.continuations.EffectScope ensureNotNull(..)");
-        private final MethodMatcher ensureNotNullEagerEffect = new MethodMatcher("arrow.core.continuations.EagerEffectScope ensureNotNull(..)");
+        private final MethodMatcher ensureNotNullEffect = new MethodMatcher("arrow.core.continuations.EffectScopeKt ensureNotNull(..)");
+        private final MethodMatcher ensureNotNullEagerEffect = new MethodMatcher("arrow.core.continuations.EagerEffectScopeKt ensureNotNull(..)");
         private final MethodMatcher ensureNotNullRaise = new MethodMatcher("arrow.core.raise.Raise ensureNotNull(..)");
 
 
@@ -71,7 +71,8 @@ public class RaiseEnsureImport extends Recipe {
             if (ensureRaise.matches(m) || ensureEffect.matches(m) || ensureEagerEffect.matches(m)) {
                 maybeAddImport("arrow.core.raise.ensure", false);
             }
-            if (ensureNotNullEffect.matches(m) || ensureNotNullEffect.matches(m) || ensureNotNullEagerEffect.matches(m)) {
+            if (ensureNotNullEffect.matches(m) || ensureNotNullEagerEffect.matches(m) || ensureNotNullRaise.matches(m)) {
+                maybeRemoveImport("arrow.core.continuations.ensureNotNull");
                 maybeAddImport("arrow.core.raise.ensureNotNull", false);
             }
             return m;
