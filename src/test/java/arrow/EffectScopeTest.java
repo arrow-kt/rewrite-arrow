@@ -126,6 +126,36 @@ class EffectScopeTest implements RewriteTest {
     }
 
     @Test
+    void ensureNotNullOnExtension() {
+        rewriteRun(
+          kotlin(
+            """
+              package com.yourorg
+                            
+              import arrow.core.continuations.EffectScope
+              import arrow.core.continuations.ensureNotNull
+
+              suspend fun EffectScope<Int>.test(msg: String?): Unit {
+                ensureNotNull(msg) { -1 }
+                return Unit
+              }
+              """,
+            """
+              package com.yourorg
+                            
+              import arrow.core.raise.Raise
+              import arrow.core.raise.ensureNotNull
+
+              suspend fun Raise<Int>.test(msg: String?): Unit {
+                ensureNotNull(msg) { -1 }
+                return Unit
+              }
+              """
+          )
+        );
+    }
+
+    @Test
     void effectBuilder() {
         rewriteRun(
           kotlin(
