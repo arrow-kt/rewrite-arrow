@@ -82,6 +82,41 @@ public class ValidatedLambdaToEitherTest implements RewriteTest {
 
     @Test
     @Disabled("FIXME: Not supported in ChangeValidatedLambda yet")
+    void validatedInlineFunction() {
+        rewriteRun(
+          kotlin(
+            """
+              package com.yourorg
+              
+              import arrow.core.Validated
+              import arrow.core.traverse
+              
+              fun foo() {
+                  listOf(1, 2, 3).traverse {
+                      val res: Validated<String, Int> = it.valid()
+                      res
+                  }
+              }
+              """,
+            """
+              package com.yourorg
+              
+              import arrow.core.Validated
+              import arrow.core.mapOrAccumulate
+              
+              fun foo() {
+                  listOf(1, 2, 3).mapOrAccumulate {
+                      val res: Validated<String, Int> = it.valid()
+                      res.bind()
+                  }
+              }
+              """
+          )
+        );
+    }
+
+    @Test
+    @Disabled("FIXME: Not supported in ChangeValidatedLambda yet")
     void validatedIfExpressionLambda() {
         rewriteRun(
           kotlin(
