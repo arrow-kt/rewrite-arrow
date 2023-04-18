@@ -14,7 +14,6 @@ public class ValidatedLambdaToEitherTest implements RewriteTest {
         spec.recipe(new ChangeValidatedLambda());
     }
 
-    @Disabled("Added base for transformation. Unusure if Validated is transformed in a different visitor.")
     @Test
     void validatedLambda() {
         rewriteRun(
@@ -33,11 +32,83 @@ public class ValidatedLambdaToEitherTest implements RewriteTest {
             """
               package com.yourorg
               
-              import arrow.core.Either
+              import arrow.core.Validated
+              import arrow.core.mapOrAccumulate
               
-              fun validate(int: Int): Either<String, Int> = TODO()
+              fun validate(int: Int): Validated<String, Int> = TODO()
               fun foo() {
-                 listOf(1, 2, 3).mapOrAccumulate { validate(it).bind() }
+                  listOf(1, 2, 3).mapOrAccumulate { validate(it).bind() }
+              }
+              """
+          )
+        );
+    }
+
+    @Test
+    void validatedMultilineLambda() {
+        rewriteRun(
+          kotlin(
+            """
+              package com.yourorg
+              
+              import arrow.core.Validated
+              import arrow.core.traverse
+              
+              fun validate(int: Int): Validated<String, Int> = TODO()
+              fun foo() {
+                  listOf(1, 2, 3).traverse {
+                      println("Hello World!")
+                      validate(it)
+                  }
+              }
+              """,
+            """
+              package com.yourorg
+              
+              import arrow.core.Validated
+              import arrow.core.mapOrAccumulate
+              
+              fun validate(int: Int): Validated<String, Int> = TODO()
+              fun foo() {
+                  listOf(1, 2, 3).mapOrAccumulate {
+                      println("Hello World!")
+                      validate(it).bind()
+                  }
+              }
+              """
+          )
+        );
+    }
+
+    @Test
+    @Disabled("FIXME: Not supported in ChangeValidatedLambda yet")
+    void validatedIfExpressionLambda() {
+        rewriteRun(
+          kotlin(
+            """
+              package com.yourorg
+              
+              import arrow.core.Validated
+              import arrow.core.traverse
+              
+              fun foo() {
+                  listOf(1, 2, 3).traverse {
+                      if(it == 1) it.invalid()
+                      else it.valid()
+                  }
+              }
+              """,
+            """
+              package com.yourorg
+              
+              import arrow.core.Validated
+              import arrow.core.mapOrAccumulate
+              
+              fun foo() {
+                  listOf(1, 2, 3).mapOrAccumulate {
+                      if(it % 2 == 0) it.invalid().bind()
+                      else it.valid().bind()
+                  }
               }
               """
           )

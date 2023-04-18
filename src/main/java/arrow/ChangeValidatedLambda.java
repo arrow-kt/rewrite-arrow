@@ -58,6 +58,8 @@ public class ChangeValidatedLambda extends Recipe {
                     m = m.withName(m.getName().withSimpleName("mapOrAccumulate"));
                     m = m.withMethodType(methodType.withName("mapOrAccumulate"));
                     m = (J.MethodInvocation) new AppendBindFunction().visitMethodInvocation(m, executionContext);
+                    maybeAddImport("arrow.core.mapOrAccumulate", false);
+                    maybeRemoveImport("arrow.core.traverse");
                 }
                 return m;
             }
