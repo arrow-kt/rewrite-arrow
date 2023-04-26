@@ -1,5 +1,5 @@
 [versions]
-org-junit-jupiter = "5.9.2"
+org-junit-jupiter = "5.9.3"
 lombok = "1.18.26"
 logback = "1.4.6"
 arrow = "1.1.6-alpha.91"
