@@ -1,7 +1,7 @@
 [versions]
 org-junit-jupiter = "5.9.2"
 lombok = "1.18.26"
-logback = "1.4.6"
+logback = "1.4.7"
 arrow = "1.1.6-alpha.91"
 rewrite-kotlin = "0.3.5"
 rewrite = "7.39.1"
