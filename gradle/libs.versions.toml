@@ -10,7 +10,7 @@ openrewrite = "5.40.3"
 assertj = "3.24.2"
 kotlin = "1.8.21"
 nexus = "1.3.0"
-checkstyle = "10.10.0"
+checkstyle = "10.12.0"
 
 [libraries]
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
